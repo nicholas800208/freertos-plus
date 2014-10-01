@@ -25,7 +25,7 @@ void host_command(int, char **);
 void help_command(int, char **);
 void host_command(int, char **);
 void mmtest_command(int, char **);
-void test_command(int, char **);
+void fib_command(int, char **);
 
 #define MKCL(n, d) {.name=#n, .fptr=n ## _command, .desc=d}
 
@@ -37,7 +37,7 @@ cmdlist cl[]={
 	MKCL(host, "Run command on host"),
 	MKCL(mmtest, "heap memory allocation test"),
 	MKCL(help, "help"),
-	MKCL(test, "test new function")
+	MKCL(fib, "Enter Fibonacci")
 };
 
 int fib(int n){
@@ -150,7 +150,7 @@ void help_command(int n,char *argv[]){
 	}
 }
 
-void test_command(int n, char *argv[]) {
+void fib_command(int n, char *argv[]) {
     int handle;
     int error;
     char buff[] = {0};
