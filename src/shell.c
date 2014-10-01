@@ -4,6 +4,8 @@
 #include <string.h>
 #include "fio.h"
 #include "filesystem.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -37,6 +39,14 @@ cmdlist cl[]={
 	MKCL(help, "help"),
 	MKCL(test, "test new function")
 };
+
+int fib(int n){
+	if (n <= 0)
+		return 0;
+	else if (n == 1)
+		return 1;
+	return fib(n-1)+fib(n-2);
+}
 
 int parse_command(char *str, char *argv[]){
 	int b_quote=0, b_dbquote=0;
@@ -85,8 +95,8 @@ int filedump(const char *filename){
 void ps_command(int n, char *argv[]){
 	signed char buf[1024];
 	vTaskList(buf);
-        fio_printf(1, "\n\rName          State   Priority  Stack  Num\n\r");
-        fio_printf(1, "*******************************************\n\r");
+       fio_printf(1, "\n\rName          State   Priority  Stack  Num\n\r");
+       fio_printf(1, "*******************************************\n\r");
 	fio_printf(1, "%s\r\n", buf + 2);	
 }
 
@@ -143,17 +153,27 @@ void help_command(int n,char *argv[]){
 void test_command(int n, char *argv[]) {
     int handle;
     int error;
-
-    fio_printf(1, "\r\n");
-
-    handle = host_action(SYS_OPEN, "output/syslog", 8);
+    char buff[] = {0};
+    int len=0;
+    int result_int=0;
+    int result_fib;
+    int ten_count=1;
+   strcpy(buff,argv[1]);
+   len = strlen(buff);
+   fio_printf(1, "\r\n");
+   for (int i=0 ; i<=len-1  ; i++){
+   	result_int=result_int+(buff[len-i-1]-'0')*ten_count;
+	ten_count=ten_count*10;
+   }
+    result_fib = fib(result_int);
+   fio_printf(1, "Fib index is  = %d , Fib result is = %d \r\n" , result_int ,result_fib );
+   handle = host_action(SYS_OPEN, "output/syslog", 8);
     if(handle == -1) {
         fio_printf(1, "Open file error!\n\r");
         return;
     }
-
     char *buffer = "Test host_write function which can write data to output/syslog\n";
-    error = host_action(SYS_WRITE, handle, (void *)buffer, strlen(buffer));
+   error = host_action(SYS_WRITE, handle, (void *)buffer, strlen(buffer));
     if(error != 0) {
         fio_printf(1, "Write file error! Remain %d bytes didn't write in the file.\n\r", error);
         host_action(SYS_CLOSE, handle);

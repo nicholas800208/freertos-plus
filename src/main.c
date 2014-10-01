@@ -116,7 +116,7 @@ void system_logger(void *pvParameters)
     int handle, error;
     const portTickType xDelay = 100000 / 100;
 
-    handle = host_action(SYS_OPEN, "output/syslog", 4);
+    handle = host_action(SYS_OPEN, "output/sysinfo", 4);
     if(handle == -1) {
         fio_printf(1, "Open file error!\n");
         return;
@@ -170,12 +170,12 @@ int main()
 	            (signed portCHAR *) "CLI",
 	            512 /* stack size */, NULL, tskIDLE_PRIORITY + 2, NULL);
 
-#if 0
+//#if 0
 	/* Create a task to record system log. */
 	xTaskCreate(system_logger,
 	            (signed portCHAR *) "Logger",
 	            1024 /* stack size */, NULL, tskIDLE_PRIORITY + 1, NULL);
-#endif
+//#endif
 
 	/* Start running the tasks. */
 	vTaskStartScheduler();
