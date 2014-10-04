@@ -167,6 +167,14 @@ void fib_command(int n, char *argv[]) {
    }
     result_fib = fib(result_int);
    fio_printf(1, "Fib index is  = %d , Fib result is = %d \r\n" , result_int ,result_fib );
+   /*fio_printf(1, "%s \r\n" , argv[0] );
+   fio_printf(1, "%d \r\n" , argv[0] );
+   fio_printf(1, "%d \r\n" , argv[1] );
+   fio_printf(1, "%d \r\n" , *argv[1] );
+   fio_printf(1, "%x \r\n" , *argv[1] );
+   //fio_printf(1, "%d \r\n" , *argv[0][] );
+   //fio_printf(1, "%d \r\n" , *argv[1][] );
+   fio_printf(1, "%d \r\n" , *argv[0] );*/
    handle = host_action(SYS_OPEN, "output/syslog", 8);
     if(handle == -1) {
         fio_printf(1, "Open file error!\n\r");
