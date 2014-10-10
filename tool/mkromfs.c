@@ -30,7 +30,8 @@ void processdir(DIR * dirp, const char * curpath, FILE * outfile, const char * p
     struct dirent * ent;
     DIR * rec_dirp;
     uint32_t cur_hash = hash_djb2((const uint8_t *) curpath, hash_init);
-    uint32_t size, w, hash;
+    uint32_t size, w, hash ,size_name;
+     
     uint8_t b;
     FILE * infile;
 
@@ -70,10 +71,12 @@ void processdir(DIR * dirp, const char * curpath, FILE * outfile, const char * p
             b = (size >>  8) & 0xff; fwrite(&b, 1, 1, outfile);
             b = (size >> 16) & 0xff; fwrite(&b, 1, 1, outfile);
             b = (size >> 24) & 0xff; fwrite(&b, 1, 1, outfile);
- 	     fwrite(ent->d_name, 16, 1, outfile);
+ 	    fwrite(ent->d_name, 16, 1, outfile);
+ 	    
             while (size) {
                 w = size > 16 * 1024 ? 16 * 1024 : size;
-                fread(buf, 1, w, infile);
+                fread(buf
+                , 1, w, infile);
                 fwrite(buf, 1, w, outfile);
                 size -= w;
             }

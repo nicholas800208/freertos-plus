@@ -6,10 +6,24 @@
 #include "filesystem.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <FreeRTOS.h>
+#include <semphr.h>
+#include <unistd.h>
 
 #include "FreeRTOS.h"
 #include "task.h"
 #include "host.h"
+#include "fio.h"
+#include "filesystem.h"
+#include "romfs.h"
+#include "osdebug.h"
+#include "hash-djb2.h"
+
+const unsigned char _sromfs;
+
+static uint32_t get_unaligned(const uint8_t * d) {
+    return ((uint32_t) d[0]) | ((uint32_t) (d[1] << 8)) | ((uint32_t) (d[2] << 16)) | ((uint32_t) (d[3] << 24));
+}
 
 typedef struct {
 	const char *name;
@@ -70,6 +84,11 @@ int parse_command(char *str, char *argv[]){
 }
 
 void ls_command(int n, char *argv[]){
+	fio_printf(1,"\n");
+	for (const uint8_t *meta = &_sromfs; get_unaligned(meta) && get_unaligned(meta + 4); meta += 	  get_unaligned(meta +4) + 24){
+		fio_printf(1,"\rfile name : %s  file size : %d bytes\r\n",meta+8 ,get_unaligned(meta+4));
+		
+}
 
 }
 

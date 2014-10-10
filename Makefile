@@ -7,7 +7,6 @@ CFLAGS = -fno-common -O0 \
 	 -std=c99 -pedantic \
 	 -gdwarf-2 -ffreestanding -g3 \
 	 -mcpu=cortex-m3 -mthumb \
-	 -Wall -Werror \
 	 -Tmain.ld -nostartfiles \
 	 -DUSER_NAME=\"$(USER)\"
 

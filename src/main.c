@@ -7,7 +7,7 @@
 #include "queue.h"
 #include "semphr.h"
 #include <string.h>
-
+#include <unistd.h>
 /* Filesystem includes */
 #include "filesystem.h"
 #include "fio.h"
@@ -17,10 +17,13 @@
 #include "shell.h"
 #include "host.h"
 
+
+extern const unsigned char _sromfs;
+
+
 /* _sromfs symbol can be found in main.ld linker script
  * it contains file system structure of test_romfs directory
  */
-extern const unsigned char _sromfs;
 
 //static void setup_hardware();
 
@@ -87,10 +90,10 @@ char recv_byte()
 }
 void command_prompt(void *pvParameters)
 {
+	fio_printf(1,"123");
 	char buf[128];
 	char *argv[20];
         char hint[] = USER_NAME "@" USER_NAME "-STM32:~$ ";
-
 	fio_printf(1, "\rWelcome to FreeRTOS Shell\r\n");
 	while(1){
                 fio_printf(1, "%s", hint);
@@ -157,7 +160,7 @@ int main()
 	fio_init();
 	
 	register_romfs("romfs", &_sromfs);
-	
+
 	/* Create the queue used by the serial task.  Messages for write to
 	 * the RS232. */
 	vSemaphoreCreateBinary(serial_tx_wait_sem);
