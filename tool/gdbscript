@@ -1,10 +1,11 @@
 file build/main.elf
 target remote :3333
 
-b main
-
+b command_prompt
 c
-
-b romfs.c
-
-b mkromfs.c:75
+set var n=1
+set buf="help"
+n
+n
+n
+j main.c:101

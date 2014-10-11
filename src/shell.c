@@ -163,9 +163,28 @@ void host_command(int n, char *argv[]){
 
 void help_command(int n,char *argv[]){
 	int i;
+	int count = 0;
+	int handle;
+        int error;
 	fio_printf(1, "\r\n");
 	for(i=0;i<sizeof(cl)/sizeof(cl[0]); ++i){
 		fio_printf(1, "%s - %s\r\n", cl[i].name, cl[i].desc);
+	}
+	if (count ==0){
+	    handle = host_action(SYS_OPEN, "output/syslog", 8);
+	    if(handle == -1) {
+		fio_printf(1, "Open file error!\n\r");
+		return;
+	    }
+            char *buffer = "GDB auto exection help_command\n";
+            error = host_action(SYS_WRITE, handle, (void *)buffer, strlen(buffer));
+            if(error != 0) {
+            fio_printf(1, "Write file error! Remain %d bytes didn't write in the file.\n\r", error);
+             host_action(SYS_CLOSE, handle);
+             return;
+             }
+             host_action(SYS_CLOSE, handle);
+             count++;
 	}
 }
 
@@ -185,29 +204,7 @@ void fib_command(int n, char *argv[]) {
 	ten_count=ten_count*10;
    }
     result_fib = fib(result_int);
-   fio_printf(1, "Fib index is  = %d , Fib result is = %d \r\n" , result_int ,result_fib );
-   /*fio_printf(1, "%s \r\n" , argv[0] );
-   fio_printf(1, "%d \r\n" , argv[0] );
-   fio_printf(1, "%d \r\n" , argv[1] );
-   fio_printf(1, "%d \r\n" , *argv[1] );
-   fio_printf(1, "%x \r\n" , *argv[1] );
-   //fio_printf(1, "%d \r\n" , *argv[0][] );
-   //fio_printf(1, "%d \r\n" , *argv[1][] );
-   fio_printf(1, "%d \r\n" , *argv[0] );*/
-   handle = host_action(SYS_OPEN, "output/syslog", 8);
-    if(handle == -1) {
-        fio_printf(1, "Open file error!\n\r");
-        return;
-    }
-    char *buffer = "Test host_write function which can write data to output/syslog\n";
-   error = host_action(SYS_WRITE, handle, (void *)buffer, strlen(buffer));
-    if(error != 0) {
-        fio_printf(1, "Write file error! Remain %d bytes didn't write in the file.\n\r", error);
-        host_action(SYS_CLOSE, handle);
-        return;
-    }
-
-    host_action(SYS_CLOSE, handle);
+   fio_printf(1, "Fib index is  = %d , Fib result is = %d \r\n" , 		    	result_int ,result_fib );
 }
 
 cmdfunc *do_command(const char *cmd){

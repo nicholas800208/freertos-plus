@@ -7,7 +7,7 @@
 #include "queue.h"
 #include "semphr.h"
 #include <string.h>
-#include <unistd.h>
+
 /* Filesystem includes */
 #include "filesystem.h"
 #include "fio.h"
@@ -90,16 +90,16 @@ char recv_byte()
 }
 void command_prompt(void *pvParameters)
 {
-	fio_printf(1,"123");
 	char buf[128];
 	char *argv[20];
+	int n=0;
         char hint[] = USER_NAME "@" USER_NAME "-STM32:~$ ";
 	fio_printf(1, "\rWelcome to FreeRTOS Shell\r\n");
 	while(1){
                 fio_printf(1, "%s", hint);
 		fio_read(0, buf, 127);
-	
-		int n=parse_command(buf, argv);
+
+		n=parse_command(buf, argv);
 
 		/* will return pointer to the command function */
 		cmdfunc *fptr=do_command(argv[0]);
